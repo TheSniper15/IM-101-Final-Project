@@ -29,78 +29,70 @@ public class AddProduct extends javax.swing.JPanel {
     dbConn db = new dbConn();
     ViewPanel vp = new ViewPanel();
     
-public void AddProd() {    
-    try {
-        // Retrieve values from the UI
-        String brand = brand1.getText();
-        String cat = category1.getText();
-        String mdl = model.getText();
-        String qty = quantity.getText();
-        String price = price1.getText();
+    public void AddProd() {    
+        try {
+              String brand = brand1.getText();
+            String cat = category1.getText();
+            String mdl = model.getText();
+            String qty = quantity.getText();
+            String price = price1.getText();
 
-        // Check if the brand exists in the Brands table
-        String checkBrandQuery = "SELECT b_id FROM Brands WHERE brand = ?";
-        db.pst = db.con.prepareStatement(checkBrandQuery);
-        db.pst.setString(1, brand);
-        db.rs = db.pst.executeQuery();
-
-        int brandId = -1;
-
-        // If the brand exists, retrieve its b_id
-        if (db.rs.next()) {
-            brandId = db.rs.getInt("b_id");  // Brand exists, get the brand_id
-        } else {
-            // If brand doesn't exist, insert it into the Brands table
-            String insertBrandQuery = "INSERT INTO Brands (brand) VALUES (?)";
-            db.pst = db.con.prepareStatement(insertBrandQuery, Statement.RETURN_GENERATED_KEYS);
+            String checkBrandQuery = "SELECT b_id FROM Brands WHERE brand = ?";
+            db.pst = db.con.prepareStatement(checkBrandQuery);
             db.pst.setString(1, brand);
-            int rowsAffected = db.pst.executeUpdate();
+            db.rs = db.pst.executeQuery();
 
-            // Check if the brand was inserted successfully
-            if (rowsAffected > 0) {
-                // Get the generated brand_id
-                db.rs = db.pst.getGeneratedKeys();
-                if (db.rs.next()) {
-                    brandId = db.rs.getInt(1);
+            int brandId = -1;
+
+            if (db.rs.next()) {
+                brandId = db.rs.getInt("b_id"); 
+            } else {
+                String insertBrandQuery = "INSERT INTO Brands (brand) VALUES (?)";
+                db.pst = db.con.prepareStatement(insertBrandQuery, Statement.RETURN_GENERATED_KEYS);
+                db.pst.setString(1, brand);
+                int rowsAffected = db.pst.executeUpdate();
+
+                if (rowsAffected > 0) {
+                    db.rs = db.pst.getGeneratedKeys();
+                    if (db.rs.next()) {
+                        brandId = db.rs.getInt(1);
+                    }
                 }
             }
-        }
 
-        // If brand_id is retrieved or inserted successfully, proceed to insert the product
-        if (brandId != -1) {
-            // Prepare the query to insert the product
-            String insertProductQuery = "INSERT INTO Product (category, brand, model, quantity, price) VALUES (?, ?, ?, ?, ?)";
-            db.pst = db.con.prepareStatement(insertProductQuery);
+            if (brandId != -1) {
+                String insertProductQuery = "INSERT INTO Product (category, brand_id, model, quantity, price) VALUES (?, ?, ?, ?, ?)";
+                db.pst = db.con.prepareStatement(insertProductQuery);
 
-            // Set parameters for the insert query
-            db.pst.setString(1, cat);  // Category
-            db.pst.setString(2, brand); // Brand (directly use the brand name)
-            db.pst.setString(3, mdl);   // Model
-            db.pst.setInt(4, Integer.parseInt(qty)); // Quantity (ensure it's parsed to integer)
-            db.pst.setString(5,price); // Price (ensure it's parsed to BigDecimal)
+                db.pst.setString(1, cat);  
+                db.pst.setInt(2, brandId); 
+                db.pst.setString(3, mdl);  
+                db.pst.setInt(4, Integer.parseInt(qty)); 
+                db.pst.setString(5,price); 
 
-            // Execute the insert query
-            int k = db.pst.executeUpdate();
 
-            // Check if the product was added successfully
-            if (k == 1) {
-                vp.retrieveData();  // Refresh the data on the view panel
-                JOptionPane.showMessageDialog(this, "Record Added!!");
+                int k = db.pst.executeUpdate();
+                
+                if (k == 1) {
+                    vp.retrieveData();  
+                    JOptionPane.showMessageDialog(this, "Record Added!!");
+                } else {
+                    JOptionPane.showMessageDialog(this, "Record Failed To Save!!");
+                }
             } else {
-                JOptionPane.showMessageDialog(this, "Record Failed To Save!!");
+                JOptionPane.showMessageDialog(this, "Failed to get brand ID.");
             }
-        } else {
-            JOptionPane.showMessageDialog(this, "Failed to get brand ID.");
-        }
 
-    } catch (SQLException ex) {
-        Logger.getLogger(AddProduct.class.getName()).log(Level.SEVERE, null, ex);
-        JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage());
-    } catch (NumberFormatException ex) {
-        // Handle invalid number format for quantity and price
-        JOptionPane.showMessageDialog(this, "Invalid number format. Please check the quantity and price values.");
+        } catch (SQLException ex) {
+            Logger.getLogger(AddProduct.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage());
+        } catch (NumberFormatException ex) {
+
+            JOptionPane.showMessageDialog(this, "Invalid number format. Please check the quantity and price values.");
+        }
     }
-}
+
+
 
 
     

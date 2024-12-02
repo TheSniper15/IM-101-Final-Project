@@ -120,11 +120,6 @@ public class ViewPanel extends javax.swing.JPanel {
 
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
-        jTextField1 = new javax.swing.JTextField();
-        jLabel1 = new javax.swing.JLabel();
-        dropbox = new javax.swing.JComboBox<>();
-        delBtn = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(255, 255, 255));
         setMaximumSize(new java.awt.Dimension(1920, 970));
@@ -165,54 +160,11 @@ public class ViewPanel extends javax.swing.JPanel {
         }
 
         add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, 1160, 930));
-
-        jTextField1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jTextField1.setText("Arvey");
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
-            }
-        });
-        add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1250, 20, 390, 60));
-
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/SP/img/search.png"))); // NOI18N
-        add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1660, 20, -1, -1));
-
-        dropbox.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        dropbox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Category", "Brand", "Model", " " }));
-        add(dropbox, new org.netbeans.lib.awtextra.AbsoluteConstraints(1250, 100, 390, 60));
-
-        delBtn.setFont(new java.awt.Font("Segoe UI", 1, 48)); // NOI18N
-        delBtn.setForeground(new java.awt.Color(255, 255, 255));
-        delBtn.setText("DELETE");
-        delBtn.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                delBtnMouseClicked(evt);
-            }
-        });
-        add(delBtn, new org.netbeans.lib.awtextra.AbsoluteConstraints(1360, 210, 200, 100));
-
-        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/SP/img/Delbutton.png"))); // NOI18N
-        add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(1310, 210, -1, -1));
     }// </editor-fold>//GEN-END:initComponents
-
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
-
-    private void delBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_delBtnMouseClicked
-        // TODO add your handling code here:
-        deleteSelectedProduct();
-    }//GEN-LAST:event_delBtnMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel delBtn;
-    private javax.swing.JComboBox<String> dropbox;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField1;
     // End of variables declaration//GEN-END:variables
 }

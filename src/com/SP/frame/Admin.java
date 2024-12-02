@@ -5,6 +5,7 @@
 package com.SP.frame;
 
 import com.SP.db.dbConn;
+import com.SP.panel.UpdateProduct;
 import com.SP.panel.ViewPanel;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
@@ -29,31 +30,32 @@ public class Admin extends javax.swing.JFrame {
     }
     
     dbConn db = new dbConn();
+    public String g_id = "1";
     
-    public void addStaff() {
+   public void addStaff() {
     try {
-        // Get input data
-        String fullname = name1.getText();
-        String role1 = role.getText();  // Assume this is where the role is entered by the user
-        
-        // Check if the role exists
+        String fname = name2.getText();  
+        String roleText = role.getText(); 
+        String unameText = uname.getText(); 
+        String pswdText = pswd.getText();  
+
         String checkRoleQuery = "SELECT role_id FROM roleTbl WHERE role_set = ?";
         db.pst = db.con.prepareStatement(checkRoleQuery);
-        db.pst.setString(1, role1);
+        db.pst.setString(1, roleText);  
         db.rs = db.pst.executeQuery();
         
         int roleId = -1;
         
         if (db.rs.next()) {
-            roleId = db.rs.getInt("role_id");
+            roleId = db.rs.getInt("role_id");  
         } else {
-            // Insert the new role if it doesn't exist
             String insertRoleQuery = "INSERT INTO roleTbl (role_set) VALUES (?)";
             db.pst = db.con.prepareStatement(insertRoleQuery, Statement.RETURN_GENERATED_KEYS);
-            db.pst.setString(1, role1);
+            db.pst.setString(1, roleText); 
             int rowsAffected = db.pst.executeUpdate();
             
             if (rowsAffected > 0) {
+  
                 db.rs = db.pst.getGeneratedKeys();
                 if (db.rs.next()) {
                     roleId = db.rs.getInt(1);
@@ -61,20 +63,23 @@ public class Admin extends javax.swing.JFrame {
             }
         }
 
-        // Insert staff into Staff table
         if (roleId != -1) {
-            String insertStaffQuery = "INSERT INTO Staff (fullname, role_ID) VALUES (?, ?)";
+            String insertStaffQuery = "INSERT INTO Staff (fullname, role_ID, password, username) VALUES (?, ?, ?,? )";
             db.pst = db.con.prepareStatement(insertStaffQuery);
-            db.pst.setString(1, fullname);
-            db.pst.setInt(2, roleId);
+            db.pst.setString(1, fname); 
+            db.pst.setInt(2, roleId);   
+            db.pst.setString(3, pswdText);
+            db.pst.setString(4, unameText);
 
             int rowsAffected = db.pst.executeUpdate();
 
+
             if (rowsAffected == 1) {
                 JOptionPane.showMessageDialog(this, "Staff record added successfully.");
-                name1.setText("");
+                name2.setText("");
                 role.setText("");
-
+                uname.setText("");  
+                pswd.setText("");   
             } else {
                 JOptionPane.showMessageDialog(this, "Failed to add staff.");
             }
@@ -85,6 +90,7 @@ public class Admin extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(this, "Error adding staff: " + ex.getMessage());
     }
 }
+
     
             public void retrieveData() {
         try {
@@ -117,6 +123,99 @@ public class Admin extends javax.swing.JFrame {
             Logger.getLogger(ViewPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    public void search() {
+        int selectedRow = jTable1.getSelectedRow();
+        if (selectedRow == -1) {
+            return;
+        }
+
+        DefaultTableModel tbModel = (DefaultTableModel) jTable1.getModel();
+
+        String fullname = tbModel.getValueAt(selectedRow, 0).toString();  
+        String roletype = tbModel.getValueAt(selectedRow, 1).toString();    
+        String pwd = tbModel.getValueAt(selectedRow, 2).toString();  
+        String usrnm = tbModel.getValueAt(selectedRow, 3).toString(); 
+        g_id = tbModel.getValueAt(selectedRow, 4).toString();
+
+        name2.setText(fullname);
+        role.setText(roletype);
+        uname.setText(usrnm);
+        pswd.setText(pwd);
+
+    }
+    
+    public void ud()
+    {
+	    try 
+		{
+                    String fullname = name2.getText();
+                    String roletype =    role.getText();
+                    String pwd =   uname.getText();
+                    String usrnm =    pswd.getText();
+			
+                    db.pst = db.con.prepareStatement("UPDATE Staff SET fullname=?,role_ID=?,password=?,username=? WHERE id=?");
+			
+                    db.pst.setString(1,fullname);
+                    db.pst.setString(2,roletype);
+                    db.pst.setString(3,pwd);
+                    db.pst.setString(4,usrnm);
+                    db.pst.setString(5,g_id);
+
+                    int k = db.pst.executeUpdate();
+                    if(k == 1)
+                    {
+                        JOptionPane.showMessageDialog(this,"Record Has Been Updated!!");
+                        name2.setText("");
+                        role.setText("");
+                        uname.setText("");
+                        pswd.setText("");
+                        
+			retrieveData();
+                    }
+		} 
+		catch (SQLException ex) 
+		{
+                    Logger.getLogger(UpdateProduct.class.getName()).log(Level.SEVERE, null, ex);
+		}
+    }
+    
+        private void deleteSelectedProduct() {
+        int selectedRow = jTable1.getSelectedRow();
+
+        if (selectedRow == -1) {
+ 
+            JOptionPane.showMessageDialog(this, "Please select a product to delete.");
+            return;
+        }
+
+
+        int productId = (int) jTable1.getValueAt(selectedRow, 4); 
+
+
+        try {
+            String sql = "DELETE FROM Staff WHERE id = ?";
+            db.pst = db.con.prepareStatement(sql);
+            db.pst.setInt(1, productId);
+
+            int rowsAffected = db.pst.executeUpdate();
+
+            if (rowsAffected > 0) {
+                ((DefaultTableModel) jTable1.getModel()).removeRow(selectedRow);
+
+                JOptionPane.showMessageDialog(this, "Product deleted successfully.");
+            } else {
+                JOptionPane.showMessageDialog(this, "Failed to delete the product.");
+            }
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Error deleting the product: " + ex.getMessage());
+        } finally {
+            try {
+                if (db.pst != null) db.pst.close();
+            } catch (SQLException ex) {
+            }
+        }
+    }
+
 
     
     /**
@@ -131,19 +230,19 @@ public class Admin extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         logout = new javax.swing.JLabel();
+        name2 = new javax.swing.JTextField();
         role = new javax.swing.JTextField();
-        name1 = new javax.swing.JTextField();
+        pswd = new javax.swing.JTextField();
+        uname = new javax.swing.JTextField();
         admin1 = new javax.swing.JLabel();
         delete1 = new javax.swing.JLabel();
         update1 = new javax.swing.JLabel();
         add = new javax.swing.JLabel();
         panel = new javax.swing.JLabel();
-        name2 = new javax.swing.JTextField();
-        role1 = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        BG = new javax.swing.JLabel();
+        name = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMaximumSize(new java.awt.Dimension(1920, 1080));
@@ -168,6 +267,11 @@ public class Admin extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable1MouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(jTable1);
         if (jTable1.getColumnModel().getColumnCount() > 0) {
             jTable1.getColumnModel().getColumn(4).setResizable(false);
@@ -185,6 +289,17 @@ public class Admin extends javax.swing.JFrame {
         });
         getContentPane().add(logout, new org.netbeans.lib.awtextra.AbsoluteConstraints(1697, 30, 170, 60));
 
+        name2.setBackground(new java.awt.Color(255, 255, 255));
+        name2.setFont(new java.awt.Font("Dialog", 1, 40)); // NOI18N
+        name2.setForeground(new java.awt.Color(0, 0, 0));
+        name2.setToolTipText("");
+        name2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                name2ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(name2, new org.netbeans.lib.awtextra.AbsoluteConstraints(1370, 280, 430, 40));
+
         role.setBackground(new java.awt.Color(255, 255, 255));
         role.setFont(new java.awt.Font("Dialog", 1, 40)); // NOI18N
         role.setForeground(new java.awt.Color(0, 0, 0));
@@ -194,18 +309,29 @@ public class Admin extends javax.swing.JFrame {
                 roleActionPerformed(evt);
             }
         });
-        getContentPane().add(role, new org.netbeans.lib.awtextra.AbsoluteConstraints(1370, 540, 430, 50));
+        getContentPane().add(role, new org.netbeans.lib.awtextra.AbsoluteConstraints(1370, 360, 430, 50));
 
-        name1.setBackground(new java.awt.Color(255, 255, 255));
-        name1.setFont(new java.awt.Font("Dialog", 1, 40)); // NOI18N
-        name1.setForeground(new java.awt.Color(0, 0, 0));
-        name1.setToolTipText("");
-        name1.addActionListener(new java.awt.event.ActionListener() {
+        pswd.setBackground(new java.awt.Color(255, 255, 255));
+        pswd.setFont(new java.awt.Font("Dialog", 1, 40)); // NOI18N
+        pswd.setForeground(new java.awt.Color(0, 0, 0));
+        pswd.setToolTipText("");
+        pswd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                name1ActionPerformed(evt);
+                pswdActionPerformed(evt);
             }
         });
-        getContentPane().add(name1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1370, 460, 430, 40));
+        getContentPane().add(pswd, new org.netbeans.lib.awtextra.AbsoluteConstraints(1370, 540, 430, 50));
+
+        uname.setBackground(new java.awt.Color(255, 255, 255));
+        uname.setFont(new java.awt.Font("Dialog", 1, 40)); // NOI18N
+        uname.setForeground(new java.awt.Color(0, 0, 0));
+        uname.setToolTipText("");
+        uname.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                unameActionPerformed(evt);
+            }
+        });
+        getContentPane().add(uname, new org.netbeans.lib.awtextra.AbsoluteConstraints(1370, 460, 430, 40));
 
         admin1.setFont(new java.awt.Font("Dialog", 1, 36)); // NOI18N
         admin1.setForeground(new java.awt.Color(255, 255, 255));
@@ -245,28 +371,6 @@ public class Admin extends javax.swing.JFrame {
         panel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/SP/img/adminpanellll.png"))); // NOI18N
         getContentPane().add(panel, new org.netbeans.lib.awtextra.AbsoluteConstraints(1060, 200, -1, -1));
 
-        name2.setBackground(new java.awt.Color(255, 255, 255));
-        name2.setFont(new java.awt.Font("Dialog", 1, 40)); // NOI18N
-        name2.setForeground(new java.awt.Color(0, 0, 0));
-        name2.setToolTipText("");
-        name2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                name2ActionPerformed(evt);
-            }
-        });
-        getContentPane().add(name2, new org.netbeans.lib.awtextra.AbsoluteConstraints(1370, 280, 430, 40));
-
-        role1.setBackground(new java.awt.Color(255, 255, 255));
-        role1.setFont(new java.awt.Font("Dialog", 1, 40)); // NOI18N
-        role1.setForeground(new java.awt.Color(0, 0, 0));
-        role1.setToolTipText("");
-        role1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                role1ActionPerformed(evt);
-            }
-        });
-        getContentPane().add(role1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1370, 360, 430, 50));
-
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/SP/img/Delbutton.png"))); // NOI18N
         getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1110, 670, -1, -1));
 
@@ -276,8 +380,8 @@ public class Admin extends javax.swing.JFrame {
         jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/SP/img/updatebutton.png"))); // NOI18N
         getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(1390, 670, -1, -1));
 
-        BG.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/SP/img/Admin_1.png"))); // NOI18N
-        getContentPane().add(BG, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
+        name.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/SP/img/Admin_1.png"))); // NOI18N
+        getContentPane().add(name, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -288,71 +392,48 @@ public class Admin extends javax.swing.JFrame {
       this.dispose();
     }//GEN-LAST:event_logoutMouseClicked
 
-    private void roleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_roleActionPerformed
+    private void pswdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pswdActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_roleActionPerformed
+    }//GEN-LAST:event_pswdActionPerformed
 
-    private void name1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_name1ActionPerformed
+    private void unameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_unameActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_name1ActionPerformed
+    }//GEN-LAST:event_unameActionPerformed
 
     private void delete1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_delete1MouseClicked
         // TODO add your handling code here:
+        deleteSelectedProduct();
     }//GEN-LAST:event_delete1MouseClicked
 
     private void update1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_update1MouseClicked
         // TODO add your handling code here:
+        ud();
     }//GEN-LAST:event_update1MouseClicked
 
     private void addMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_addMouseClicked
         // TODO add your handling code here:
+        addStaff();
     }//GEN-LAST:event_addMouseClicked
 
     private void name2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_name2ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_name2ActionPerformed
 
-    private void role1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_role1ActionPerformed
+    private void roleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_roleActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_role1ActionPerformed
+    }//GEN-LAST:event_roleActionPerformed
+
+    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
+        // TODO add your handling code here:
+        search();
+    }//GEN-LAST:event_jTable1MouseClicked
 
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Admin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Admin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Admin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Admin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new Admin().setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel BG;
     private javax.swing.JLabel add;
     private javax.swing.JLabel admin1;
     private javax.swing.JLabel delete1;
@@ -362,11 +443,12 @@ public class Admin extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     private javax.swing.JLabel logout;
-    private javax.swing.JTextField name1;
+    private javax.swing.JLabel name;
     private javax.swing.JTextField name2;
     private javax.swing.JLabel panel;
+    private javax.swing.JTextField pswd;
     private javax.swing.JTextField role;
-    private javax.swing.JTextField role1;
+    private javax.swing.JTextField uname;
     private javax.swing.JLabel update1;
     // End of variables declaration//GEN-END:variables
 }
