@@ -4,6 +4,12 @@
  */
 package com.SP.frame;
 
+import com.SP.db.dbConn;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author Arvy
@@ -15,7 +21,11 @@ public class login extends javax.swing.JFrame {
      */
     public login() {
         initComponents();
+        //HidePassword.setVisible(false);
+	db.Connect();
     }
+    
+    dbConn db = new dbConn();
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -27,8 +37,8 @@ public class login extends javax.swing.JFrame {
     private void initComponents() {
 
         username = new javax.swing.JTextField();
-        password = new javax.swing.JTextField();
-        add = new javax.swing.JLabel();
+        jPasswordField1 = new javax.swing.JPasswordField();
+        Enter = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -43,23 +53,23 @@ public class login extends javax.swing.JFrame {
         username.setToolTipText("");
         getContentPane().add(username, new org.netbeans.lib.awtextra.AbsoluteConstraints(900, 500, 510, 70));
 
-        password.setEditable(false);
-        password.setBackground(new java.awt.Color(255, 255, 255));
-        password.setFont(new java.awt.Font("Dialog", 1, 36)); // NOI18N
-        password.setForeground(new java.awt.Color(0, 0, 0));
-        password.setText("Chris Soriano");
-        password.setToolTipText("");
-        password.addActionListener(new java.awt.event.ActionListener() {
+        jPasswordField1.setText("password");
+        jPasswordField1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                passwordActionPerformed(evt);
+                jPasswordField1ActionPerformed(evt);
             }
         });
-        getContentPane().add(password, new org.netbeans.lib.awtextra.AbsoluteConstraints(900, 620, 510, 70));
+        getContentPane().add(jPasswordField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(900, 620, 510, 70));
 
-        add.setFont(new java.awt.Font("Dialog", 1, 48)); // NOI18N
-        add.setForeground(new java.awt.Color(255, 255, 255));
-        add.setText("ENTER");
-        getContentPane().add(add, new org.netbeans.lib.awtextra.AbsoluteConstraints(920, 840, -1, -1));
+        Enter.setFont(new java.awt.Font("Dialog", 1, 48)); // NOI18N
+        Enter.setForeground(new java.awt.Color(255, 255, 255));
+        Enter.setText("ENTER");
+        Enter.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                EnterMouseEntered(evt);
+            }
+        });
+        getContentPane().add(Enter, new org.netbeans.lib.awtextra.AbsoluteConstraints(920, 840, -1, -1));
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/SP/img/LOGIN.png"))); // NOI18N
         getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
@@ -67,49 +77,66 @@ public class login extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void passwordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_passwordActionPerformed
+    private void jPasswordField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jPasswordField1ActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_passwordActionPerformed
+    }//GEN-LAST:event_jPasswordField1ActionPerformed
+
+    private void EnterMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_EnterMouseEntered
+        // TODO add your handling code here:
+        new Staff_dashboard().setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_EnterMouseEntered
 
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new login().setVisible(true);
-            }
-        });
-    }
+    private void logincom()
+	{
+		String usr = username.getText();
+		String pswd = new String(jPasswordField1.getPassword());
+		String stat = "Admin";
+		
+		try
+		{
+			db.pst = db.con.prepareStatement("SELECT * FROM librarians where username = ? and password = ?");
+			db.pst.setString(1, usr);
+			db.pst.setString(2,pswd);
+			db.rs = db.pst.executeQuery();
+			
+			if(db.rs.next())
+			{
+				db.pst = db.con.prepareStatement("SELECT * FROM librarians where username = ? and password = ? and Status = ?");
+				db.pst.setString(1, usr);
+				db.pst.setString(2,pswd);
+				db.pst.setString(3,stat);
+				db.rs = db.pst.executeQuery();
+			
+				if(db.rs.next())
+				{
+					new Admin().setVisible(true);
+					this.dispose();
+				}
+				else
+				{
+					new Staff_dashboard().setVisible(true);
+					this.dispose();
+				}
+			}
+			else
+			{
+				JOptionPane.showMessageDialog(this, "Username or Password is Incorrect!!");
+			}
+		}
+		catch(SQLException ex)
+		{
+			Logger.getLogger(login.class.getName()).log(Level.SEVERE, null, ex);
+		}
+	}
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel add;
+    private javax.swing.JLabel Enter;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JTextField password;
+    private javax.swing.JPasswordField jPasswordField1;
     private javax.swing.JTextField username;
     // End of variables declaration//GEN-END:variables
 }
