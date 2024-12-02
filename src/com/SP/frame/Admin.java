@@ -128,7 +128,6 @@ public class Admin extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        add = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         logout = new javax.swing.JLabel();
@@ -137,21 +136,18 @@ public class Admin extends javax.swing.JFrame {
         admin1 = new javax.swing.JLabel();
         delete1 = new javax.swing.JLabel();
         update1 = new javax.swing.JLabel();
+        add = new javax.swing.JLabel();
+        panel = new javax.swing.JLabel();
+        name2 = new javax.swing.JTextField();
+        role1 = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
         BG = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMaximumSize(new java.awt.Dimension(1920, 1080));
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        add.setFont(new java.awt.Font("Dialog", 1, 36)); // NOI18N
-        add.setForeground(new java.awt.Color(255, 255, 255));
-        add.setText("ADD");
-        add.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                addMouseClicked(evt);
-            }
-        });
-        getContentPane().add(add, new org.netbeans.lib.awtextra.AbsoluteConstraints(1710, 520, -1, -1));
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -198,7 +194,7 @@ public class Admin extends javax.swing.JFrame {
                 roleActionPerformed(evt);
             }
         });
-        getContentPane().add(role, new org.netbeans.lib.awtextra.AbsoluteConstraints(1360, 360, 430, 50));
+        getContentPane().add(role, new org.netbeans.lib.awtextra.AbsoluteConstraints(1370, 540, 430, 50));
 
         name1.setBackground(new java.awt.Color(255, 255, 255));
         name1.setFont(new java.awt.Font("Dialog", 1, 40)); // NOI18N
@@ -209,7 +205,7 @@ public class Admin extends javax.swing.JFrame {
                 name1ActionPerformed(evt);
             }
         });
-        getContentPane().add(name1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1360, 280, 430, 40));
+        getContentPane().add(name1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1370, 460, 430, 40));
 
         admin1.setFont(new java.awt.Font("Dialog", 1, 36)); // NOI18N
         admin1.setForeground(new java.awt.Color(255, 255, 255));
@@ -224,7 +220,7 @@ public class Admin extends javax.swing.JFrame {
                 delete1MouseClicked(evt);
             }
         });
-        getContentPane().add(delete1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1180, 520, -1, -1));
+        getContentPane().add(delete1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1170, 690, -1, -1));
 
         update1.setFont(new java.awt.Font("Dialog", 1, 36)); // NOI18N
         update1.setForeground(new java.awt.Color(255, 255, 255));
@@ -234,7 +230,51 @@ public class Admin extends javax.swing.JFrame {
                 update1MouseClicked(evt);
             }
         });
-        getContentPane().add(update1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1430, 520, -1, -1));
+        getContentPane().add(update1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1440, 700, -1, -1));
+
+        add.setFont(new java.awt.Font("Dialog", 1, 36)); // NOI18N
+        add.setForeground(new java.awt.Color(255, 255, 255));
+        add.setText("ADD");
+        add.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                addMouseClicked(evt);
+            }
+        });
+        getContentPane().add(add, new org.netbeans.lib.awtextra.AbsoluteConstraints(1730, 690, -1, -1));
+
+        panel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/SP/img/adminpanellll.png"))); // NOI18N
+        getContentPane().add(panel, new org.netbeans.lib.awtextra.AbsoluteConstraints(1060, 200, -1, -1));
+
+        name2.setBackground(new java.awt.Color(255, 255, 255));
+        name2.setFont(new java.awt.Font("Dialog", 1, 40)); // NOI18N
+        name2.setForeground(new java.awt.Color(0, 0, 0));
+        name2.setToolTipText("");
+        name2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                name2ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(name2, new org.netbeans.lib.awtextra.AbsoluteConstraints(1370, 280, 430, 40));
+
+        role1.setBackground(new java.awt.Color(255, 255, 255));
+        role1.setFont(new java.awt.Font("Dialog", 1, 40)); // NOI18N
+        role1.setForeground(new java.awt.Color(0, 0, 0));
+        role1.setToolTipText("");
+        role1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                role1ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(role1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1370, 360, 430, 50));
+
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/SP/img/Delbutton.png"))); // NOI18N
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1110, 670, -1, -1));
+
+        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/SP/img/addbutton.png"))); // NOI18N
+        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(1660, 670, -1, -1));
+
+        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/SP/img/updatebutton.png"))); // NOI18N
+        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(1390, 670, -1, -1));
 
         BG.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/SP/img/Admin_1.png"))); // NOI18N
         getContentPane().add(BG, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
@@ -267,6 +307,14 @@ public class Admin extends javax.swing.JFrame {
     private void addMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_addMouseClicked
         // TODO add your handling code here:
     }//GEN-LAST:event_addMouseClicked
+
+    private void name2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_name2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_name2ActionPerformed
+
+    private void role1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_role1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_role1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -308,11 +356,17 @@ public class Admin extends javax.swing.JFrame {
     private javax.swing.JLabel add;
     private javax.swing.JLabel admin1;
     private javax.swing.JLabel delete1;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     private javax.swing.JLabel logout;
     private javax.swing.JTextField name1;
+    private javax.swing.JTextField name2;
+    private javax.swing.JLabel panel;
     private javax.swing.JTextField role;
+    private javax.swing.JTextField role1;
     private javax.swing.JLabel update1;
     // End of variables declaration//GEN-END:variables
 }
