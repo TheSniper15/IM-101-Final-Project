@@ -4,6 +4,14 @@
  */
 package com.SP.panel;
 
+import com.SP.db.dbConn;
+import java.sql.SQLException;
+import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author Arvy
@@ -15,7 +23,90 @@ public class ViewPanel extends javax.swing.JPanel {
      */
     public ViewPanel() {
         initComponents();
+        db.Connect();
+        retrieveData();
     }
+    
+    dbConn db = new dbConn();
+    
+        public void retrieveData() {
+        try {
+            int q;
+            db.pst = db.con.prepareStatement("SELECT * FROM product");
+            db.rs = db.pst.executeQuery();
+            java.sql.ResultSetMetaData rss = db.rs.getMetaData();
+            q = rss.getColumnCount();  
+
+            DefaultTableModel df = (DefaultTableModel) jTable1.getModel();
+            df.setRowCount(0);
+
+            while (db.rs.next()) {
+                Vector v2 = new Vector();
+                for (int a = 1; a  <= q ; a++) {
+                    v2.add(db.rs.getString("CATEGORY"));
+                    v2.add(db.rs.getString("BRAND_ID"));
+                    v2.add(db.rs.getString("MODEL"));
+                    v2.add(db.rs.getString("QUANTITY"));
+                    v2.add(db.rs.getString("PRICE"));
+                    v2.add(db.rs.getInt("p_id"));
+                }
+                df.addRow(v2);
+            }
+            jTable1.getColumnModel().getColumn(5).setMaxWidth(0);
+            jTable1.getColumnModel().getColumn(5).setMinWidth(0);
+            jTable1.getColumnModel().getColumn(5).setPreferredWidth(0);
+
+        } catch (SQLException ex) {
+            Logger.getLogger(ViewPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+        
+    // Method to delete the selected product from the JTable and the database
+    private void deleteSelectedProduct() {
+        int selectedRow = jTable1.getSelectedRow();
+
+        if (selectedRow == -1) {
+            // No row is selected, show a message
+            JOptionPane.showMessageDialog(this, "Please select a product to delete.");
+            return;
+        }
+
+        // Get the ID of the selected product from the last column (index 4)
+        int productId = (int) jTable1.getValueAt(selectedRow, 5); // The ID is stored in the 5th column (index 4)
+
+        // Perform the delete operation in the database
+        try {
+            // SQL DELETE query
+            String sql = "DELETE FROM Product WHERE p_id = ?";
+            db.pst = db.con.prepareStatement(sql);
+            db.pst.setInt(1, productId);
+
+            // Execute the query
+            int rowsAffected = db.pst.executeUpdate();
+
+            if (rowsAffected > 0) {
+                // If the product was deleted, remove the row from the JTable
+                ((DefaultTableModel) jTable1.getModel()).removeRow(selectedRow);
+
+                // Show a success message
+                JOptionPane.showMessageDialog(this, "Product deleted successfully.");
+            } else {
+                // If no rows were affected, show an error message
+                JOptionPane.showMessageDialog(this, "Failed to delete the product.");
+            }
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Error deleting the product: " + ex.getMessage());
+        } finally {
+            // Close the PreparedStatement
+            try {
+                if (db.pst != null) db.pst.close();
+            } catch (SQLException ex) {
+                // Handle exception
+            }
+        }
+    }
+
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -31,25 +122,46 @@ public class ViewPanel extends javax.swing.JPanel {
         jTextField1 = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         dropbox = new javax.swing.JComboBox<>();
-        jLabel3 = new javax.swing.JLabel();
+        delBtn = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(255, 255, 255));
+        setMaximumSize(new java.awt.Dimension(1920, 970));
+        setMinimumSize(new java.awt.Dimension(1920, 970));
+        setPreferredSize(new java.awt.Dimension(1920, 970));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jTable1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
             },
             new String [] {
-                "Category", "Brand", "Model", "Price"
+                "Category", "Brand", "Model", "Quantity", "Price", "ID"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jTable1.setRowHeight(25);
         jScrollPane1.setViewportView(jTable1);
+        if (jTable1.getColumnModel().getColumnCount() > 0) {
+            jTable1.getColumnModel().getColumn(0).setResizable(false);
+            jTable1.getColumnModel().getColumn(1).setResizable(false);
+            jTable1.getColumnModel().getColumn(2).setResizable(false);
+            jTable1.getColumnModel().getColumn(3).setResizable(false);
+            jTable1.getColumnModel().getColumn(4).setResizable(false);
+            jTable1.getColumnModel().getColumn(5).setResizable(false);
+            jTable1.getColumnModel().getColumn(5).setPreferredWidth(0);
+        }
 
         add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, 1160, 930));
 
@@ -69,10 +181,15 @@ public class ViewPanel extends javax.swing.JPanel {
         dropbox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Category", "Brand", "Model", " " }));
         add(dropbox, new org.netbeans.lib.awtextra.AbsoluteConstraints(1250, 100, 390, 60));
 
-        jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 48)); // NOI18N
-        jLabel3.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel3.setText("DELETE");
-        add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(1360, 210, 200, 100));
+        delBtn.setFont(new java.awt.Font("Segoe UI", 1, 48)); // NOI18N
+        delBtn.setForeground(new java.awt.Color(255, 255, 255));
+        delBtn.setText("DELETE");
+        delBtn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                delBtnMouseClicked(evt);
+            }
+        });
+        add(delBtn, new org.netbeans.lib.awtextra.AbsoluteConstraints(1360, 210, 200, 100));
 
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/SP/img/Delbutton.png"))); // NOI18N
         add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(1310, 210, -1, -1));
@@ -82,12 +199,17 @@ public class ViewPanel extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField1ActionPerformed
 
+    private void delBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_delBtnMouseClicked
+        // TODO add your handling code here:
+        deleteSelectedProduct();
+    }//GEN-LAST:event_delBtnMouseClicked
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel delBtn;
     private javax.swing.JComboBox<String> dropbox;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     private javax.swing.JTextField jTextField1;

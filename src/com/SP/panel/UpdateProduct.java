@@ -4,6 +4,13 @@
  */
 package com.SP.panel;
 
+import com.SP.db.dbConn;
+import java.sql.SQLException;
+import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author Arvy
@@ -15,6 +22,54 @@ public class UpdateProduct extends javax.swing.JPanel {
      */
     public UpdateProduct() {
         initComponents();
+        db.Connect();
+    }
+    
+    dbConn db = new dbConn();
+    
+            public void retrieveData() {
+        try {
+            int q;
+            db.pst = db.con.prepareStatement("SELECT * FROM product");
+            db.rs = db.pst.executeQuery();
+            java.sql.ResultSetMetaData rss = db.rs.getMetaData();
+            q = rss.getColumnCount();  
+
+            DefaultTableModel df = (DefaultTableModel) jTable1.getModel();
+            df.setRowCount(0);
+
+            while (db.rs.next()) {
+                Vector v2 = new Vector();
+                for (int a = 1; a  <= q ; a++) {
+                    v2.add(db.rs.getString("CATEGORY"));
+                    v2.add(db.rs.getString("BRAND_ID"));
+                    v2.add(db.rs.getString("MODEL"));
+                    v2.add(db.rs.getString("QUANTITY"));
+                    v2.add(db.rs.getString("PRICE"));
+                    v2.add(db.rs.getInt("p_id"));
+                }
+                df.addRow(v2);
+            }
+            jTable1.getColumnModel().getColumn(5).setMaxWidth(0);
+            jTable1.getColumnModel().getColumn(5).setMinWidth(0);
+            jTable1.getColumnModel().getColumn(5).setPreferredWidth(0);
+
+        } catch (SQLException ex) {
+            Logger.getLogger(ViewPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+        public void search()
+    {
+	DefaultTableModel tbModel = (DefaultTableModel)jTable1.getModel();
+        
+	String brand = tbModel.getValueAt(jTable1.getSelectedRow(), 0).toString();
+	String cateegory = tbModel.getValueAt(jTable1.getSelectedRow(), 1).toString();
+	String model = tbModel.getValueAt(jTable1.getSelectedRow(), 2).toString();
+        String quantity = tbModel.getValueAt(jTable1.getSelectedRow(), 2).toString();
+        String price = tbModel.getValueAt(jTable1.getSelectedRow(), 2).toString();
+        
+        
     }
 
     /**
@@ -37,6 +92,9 @@ public class UpdateProduct extends javax.swing.JPanel {
         panellin = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(255, 255, 255));
+        setMaximumSize(new java.awt.Dimension(1920, 970));
+        setMinimumSize(new java.awt.Dimension(1920, 970));
+        setPreferredSize(new java.awt.Dimension(1920, 970));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(

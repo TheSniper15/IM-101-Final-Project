@@ -35,6 +35,9 @@ public class AddProduct extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(255, 255, 255));
+        setMaximumSize(new java.awt.Dimension(1920, 970));
+        setMinimumSize(new java.awt.Dimension(1920, 970));
+        setPreferredSize(new java.awt.Dimension(1920, 970));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         brand1.setEditable(false);

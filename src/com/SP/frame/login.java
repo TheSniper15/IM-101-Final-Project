@@ -22,7 +22,7 @@ public class login extends javax.swing.JFrame {
     public login() {
         initComponents();
         //HidePassword.setVisible(false);
-	db.Connect();
+	//db.Connect();
     }
     
     dbConn db = new dbConn();
@@ -65,6 +65,9 @@ public class login extends javax.swing.JFrame {
         Enter.setForeground(new java.awt.Color(255, 255, 255));
         Enter.setText("ENTER");
         Enter.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                EnterMouseClicked(evt);
+            }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 EnterMouseEntered(evt);
             }
@@ -83,9 +86,14 @@ public class login extends javax.swing.JFrame {
 
     private void EnterMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_EnterMouseEntered
         // TODO add your handling code here:
+
+    }//GEN-LAST:event_EnterMouseEntered
+
+    private void EnterMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_EnterMouseClicked
+        // TODO add your handling code here:
         new Staff_dashboard().setVisible(true);
         this.dispose();
-    }//GEN-LAST:event_EnterMouseEntered
+    }//GEN-LAST:event_EnterMouseClicked
 
     /**
      * @param args the command line arguments

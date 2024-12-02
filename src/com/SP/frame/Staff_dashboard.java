@@ -19,24 +19,27 @@ public class Staff_dashboard extends javax.swing.JFrame {
      */
     public Staff_dashboard() {
         initComponents();
-        vw();
+        onStrt();
     }
     
-    ViewPanel vwp = new ViewPanel();
-    AddProduct vwAddp = new AddProduct();
-    UpdateProduct vwUdp = new UpdateProduct();
-    
-    public void vw(){
-        View.add(vwp);
+    public void onStrt(){
+        addProduct1.setVisible(false);
+        updateProduct1.setVisible(false);
+        viewPanel1.setVisible(true);
     }
     
-    public void vwAdd(){
-        View.add(vwAddp);
+    public void addPrd(){
+        viewPanel1.setVisible(false);
+        updateProduct1.setVisible(false);
+        addProduct1.setVisible(true);
     }
     
-    public void vwUd(){
-        View.add(vwUdp);
+    public void udPrd(){
+        viewPanel1.setVisible(false);
+        addProduct1.setVisible(false);
+        updateProduct1.setVisible(true);
     }
+  
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -52,7 +55,9 @@ public class Staff_dashboard extends javax.swing.JFrame {
         add = new javax.swing.JLabel();
         update = new javax.swing.JLabel();
         delete1 = new javax.swing.JLabel();
-        View = new javax.swing.JPanel();
+        viewPanel1 = new com.SP.panel.ViewPanel();
+        updateProduct1 = new com.SP.panel.UpdateProduct();
+        addProduct1 = new com.SP.panel.AddProduct();
         BG = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -108,21 +113,9 @@ public class Staff_dashboard extends javax.swing.JFrame {
             }
         });
         getContentPane().add(delete1, new org.netbeans.lib.awtextra.AbsoluteConstraints(920, 10, -1, -1));
-
-        View.setBackground(new java.awt.Color(255, 255, 255));
-
-        javax.swing.GroupLayout ViewLayout = new javax.swing.GroupLayout(View);
-        View.setLayout(ViewLayout);
-        ViewLayout.setHorizontalGroup(
-            ViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1920, Short.MAX_VALUE)
-        );
-        ViewLayout.setVerticalGroup(
-            ViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 970, Short.MAX_VALUE)
-        );
-
-        getContentPane().add(View, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 110, 1920, 970));
+        getContentPane().add(viewPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 110, -1, -1));
+        getContentPane().add(updateProduct1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 110, -1, -1));
+        getContentPane().add(addProduct1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 110, -1, -1));
 
         BG.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/SP/img/STAFF_DASHBOARD_1.png"))); // NOI18N
         getContentPane().add(BG, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
@@ -131,24 +124,26 @@ public class Staff_dashboard extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void dashboardMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_dashboardMouseClicked
-        // TODO add your handling code here:
+        onStrt();
     }//GEN-LAST:event_dashboardMouseClicked
 
     private void addMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_addMouseClicked
-        
+        addPrd();
     }//GEN-LAST:event_addMouseClicked
 
     private void updateMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_updateMouseClicked
-
+        udPrd();
     }//GEN-LAST:event_updateMouseClicked
 
     private void logoutMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_logoutMouseClicked
       login loginFrame = new login();
-        loginFrame.setVisible(true);
+      loginFrame.setVisible(true);
+      this.dispose();
     }//GEN-LAST:event_logoutMouseClicked
 
     private void delete1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_delete1MouseClicked
         // TODO add your handling code here:
+        onStrt();
     }//GEN-LAST:event_delete1MouseClicked
 
    
@@ -159,11 +154,13 @@ public class Staff_dashboard extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel BG;
-    private javax.swing.JPanel View;
     private javax.swing.JLabel add;
+    private com.SP.panel.AddProduct addProduct1;
     private javax.swing.JLabel dashboard;
     private javax.swing.JLabel delete1;
     private javax.swing.JLabel logout;
     private javax.swing.JLabel update;
+    private com.SP.panel.UpdateProduct updateProduct1;
+    private com.SP.panel.ViewPanel viewPanel1;
     // End of variables declaration//GEN-END:variables
 }

@@ -11,6 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import com.mysql.cj.jdbc.result.ResultSetMetaData;
 
 /**
  *
@@ -24,7 +25,7 @@ public class dbConn {
 	
 	private final String uName = "root";
 	private final String pass = "";
-	private final String host = "jdbc:mysql://localhost:3306/library";
+	private final String host = "jdbc:mysql://localhost:3306/imfinals";
 	
 	public void Connect()
 	{

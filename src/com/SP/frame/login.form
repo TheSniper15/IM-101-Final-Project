@@ -73,6 +73,7 @@
         <Property name="text" type="java.lang.String" value="ENTER"/>
       </Properties>
       <Events>
+        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="EnterMouseClicked"/>
         <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="EnterMouseEntered"/>
       </Events>
       <Constraints>
