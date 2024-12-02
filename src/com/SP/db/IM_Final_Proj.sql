@@ -21,6 +21,8 @@ CREATE TABLE Staff(
     
 );
 
-INSERT INTO Product(category, brand_id, model, quantity, price) VALUES ("Gaming",1,"LOQ 15IRX9",10,82000);
+INSERT INTO Product(category, brand_id, model, quantity, price) VALUES 
+("Gaming",1,"LOQ 15IRX9",10,82000),
+("Gaming",1,"Legion",6,82000);
 INSERT INTO Brands(brand) VALUES ("Lenovo");
 DROP TABLE Product;

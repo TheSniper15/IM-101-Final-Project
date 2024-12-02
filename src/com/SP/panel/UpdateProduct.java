@@ -23,6 +23,7 @@ public class UpdateProduct extends javax.swing.JPanel {
     public UpdateProduct() {
         initComponents();
         db.Connect();
+        retrieveData();
     }
     
     dbConn db = new dbConn();
@@ -58,19 +59,32 @@ public class UpdateProduct extends javax.swing.JPanel {
             Logger.getLogger(ViewPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-        public void search()
-    {
-	DefaultTableModel tbModel = (DefaultTableModel)jTable1.getModel();
-        
-	String brand = tbModel.getValueAt(jTable1.getSelectedRow(), 0).toString();
-	String cateegory = tbModel.getValueAt(jTable1.getSelectedRow(), 1).toString();
-	String model = tbModel.getValueAt(jTable1.getSelectedRow(), 2).toString();
-        String quantity = tbModel.getValueAt(jTable1.getSelectedRow(), 2).toString();
-        String price = tbModel.getValueAt(jTable1.getSelectedRow(), 2).toString();
-        
-        
+           
+            
+    public void search() {
+        // Make sure a row is selected
+        int selectedRow = jTable1.getSelectedRow();
+        if (selectedRow == -1) {
+            return;  // If no row is selected, return and do nothing
+        }
+
+        DefaultTableModel tbModel = (DefaultTableModel) jTable1.getModel();
+
+        // Get values from the selected row
+        String brand = tbModel.getValueAt(selectedRow, 0).toString();  // Assuming brand is in the first column
+        String cat = tbModel.getValueAt(selectedRow, 1).toString();    // Category in the second column
+        String model = tbModel.getValueAt(selectedRow, 2).toString();  // Model in the third column
+        String qty = tbModel.getValueAt(selectedRow, 3).toString();    // Quantity in the fourth column
+        String price = tbModel.getValueAt(selectedRow, 4).toString();  // Price in the fifth column
+
+        // Update the text fields with the selected row's data
+        brand1.setText(brand);
+        category.setText(cat);
+        model1.setText(model);
+        quantity.setText(qty);
+        price1.setText(price);
     }
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -86,7 +100,7 @@ public class UpdateProduct extends javax.swing.JPanel {
         brand1 = new javax.swing.JTextField();
         category = new javax.swing.JTextField();
         model1 = new javax.swing.JTextField();
-        price = new javax.swing.JTextField();
+        quantity = new javax.swing.JTextField();
         update = new javax.swing.JLabel();
         butup = new javax.swing.JLabel();
         price1 = new javax.swing.JTextField();
@@ -100,16 +114,36 @@ public class UpdateProduct extends javax.swing.JPanel {
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
             },
             new String [] {
-                "Category", "Brand", "Model", "Quantity", "Price"
+                "Category", "Brand", "Model", "Quantity", "Price", "ID"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable1MouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(jTable1);
+        if (jTable1.getColumnModel().getColumnCount() > 0) {
+            jTable1.getColumnModel().getColumn(0).setResizable(false);
+            jTable1.getColumnModel().getColumn(1).setResizable(false);
+            jTable1.getColumnModel().getColumn(3).setResizable(false);
+            jTable1.getColumnModel().getColumn(4).setResizable(false);
+            jTable1.getColumnModel().getColumn(5).setResizable(false);
+        }
 
         add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, 1000, 920));
 
@@ -117,7 +151,6 @@ public class UpdateProduct extends javax.swing.JPanel {
         brand1.setBackground(new java.awt.Color(255, 255, 255));
         brand1.setFont(new java.awt.Font("Dialog", 1, 40)); // NOI18N
         brand1.setForeground(new java.awt.Color(0, 0, 0));
-        brand1.setText("Acer");
         brand1.setToolTipText("");
         add(brand1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1310, 80, 520, 50));
 
@@ -125,7 +158,6 @@ public class UpdateProduct extends javax.swing.JPanel {
         category.setBackground(new java.awt.Color(255, 255, 255));
         category.setFont(new java.awt.Font("Dialog", 1, 40)); // NOI18N
         category.setForeground(new java.awt.Color(0, 0, 0));
-        category.setText("Gaming");
         category.setToolTipText("");
         category.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -138,7 +170,6 @@ public class UpdateProduct extends javax.swing.JPanel {
         model1.setBackground(new java.awt.Color(255, 255, 255));
         model1.setFont(new java.awt.Font("Dialog", 1, 40)); // NOI18N
         model1.setForeground(new java.awt.Color(0, 0, 0));
-        model1.setText("Nitro 58ye");
         model1.setToolTipText("");
         model1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -147,18 +178,17 @@ public class UpdateProduct extends javax.swing.JPanel {
         });
         add(model1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1310, 310, 520, 50));
 
-        price.setEditable(false);
-        price.setBackground(new java.awt.Color(255, 255, 255));
-        price.setFont(new java.awt.Font("Dialog", 1, 40)); // NOI18N
-        price.setForeground(new java.awt.Color(0, 0, 0));
-        price.setText("10");
-        price.setToolTipText("");
-        price.addActionListener(new java.awt.event.ActionListener() {
+        quantity.setEditable(false);
+        quantity.setBackground(new java.awt.Color(255, 255, 255));
+        quantity.setFont(new java.awt.Font("Dialog", 1, 40)); // NOI18N
+        quantity.setForeground(new java.awt.Color(0, 0, 0));
+        quantity.setToolTipText("");
+        quantity.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                priceActionPerformed(evt);
+                quantityActionPerformed(evt);
             }
         });
-        add(price, new org.netbeans.lib.awtextra.AbsoluteConstraints(1310, 540, 520, 60));
+        add(quantity, new org.netbeans.lib.awtextra.AbsoluteConstraints(1310, 540, 520, 60));
 
         update.setFont(new java.awt.Font("Dialog", 1, 30)); // NOI18N
         update.setForeground(new java.awt.Color(255, 255, 255));
@@ -172,7 +202,6 @@ public class UpdateProduct extends javax.swing.JPanel {
         price1.setBackground(new java.awt.Color(255, 255, 255));
         price1.setFont(new java.awt.Font("Dialog", 1, 40)); // NOI18N
         price1.setForeground(new java.awt.Color(0, 0, 0));
-        price1.setText("48,000");
         price1.setToolTipText("");
         price1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -193,13 +222,18 @@ public class UpdateProduct extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_model1ActionPerformed
 
-    private void priceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_priceActionPerformed
+    private void quantityActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_quantityActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_priceActionPerformed
+    }//GEN-LAST:event_quantityActionPerformed
 
     private void price1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_price1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_price1ActionPerformed
+
+    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
+        // TODO add your handling code here:
+        search();
+    }//GEN-LAST:event_jTable1MouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -210,8 +244,8 @@ public class UpdateProduct extends javax.swing.JPanel {
     private javax.swing.JTable jTable1;
     private javax.swing.JTextField model1;
     private javax.swing.JLabel panellin;
-    private javax.swing.JTextField price;
     private javax.swing.JTextField price1;
+    private javax.swing.JTextField quantity;
     private javax.swing.JLabel update;
     // End of variables declaration//GEN-END:variables
 }
