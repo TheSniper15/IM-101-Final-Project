@@ -30,9 +30,10 @@ public class AddProduct extends javax.swing.JPanel {
         category1 = new javax.swing.JTextField();
         model = new javax.swing.JTextField();
         price = new javax.swing.JTextField();
-        jLabel2 = new javax.swing.JLabel();
         add = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
+        price1 = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(255, 255, 255));
         setMaximumSize(new java.awt.Dimension(1920, 970));
@@ -46,7 +47,7 @@ public class AddProduct extends javax.swing.JPanel {
         brand1.setForeground(new java.awt.Color(0, 0, 0));
         brand1.setText("Acer");
         brand1.setToolTipText("");
-        add(brand1, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 230, 680, 90));
+        add(brand1, new org.netbeans.lib.awtextra.AbsoluteConstraints(750, 160, 680, 90));
 
         category1.setEditable(false);
         category1.setBackground(new java.awt.Color(255, 255, 255));
@@ -54,7 +55,7 @@ public class AddProduct extends javax.swing.JPanel {
         category1.setForeground(new java.awt.Color(0, 0, 0));
         category1.setText("Gaming");
         category1.setToolTipText("");
-        add(category1, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 370, 680, 90));
+        add(category1, new org.netbeans.lib.awtextra.AbsoluteConstraints(750, 290, 680, 90));
 
         model.setEditable(false);
         model.setBackground(new java.awt.Color(255, 255, 255));
@@ -62,36 +63,53 @@ public class AddProduct extends javax.swing.JPanel {
         model.setForeground(new java.awt.Color(0, 0, 0));
         model.setText("Nitro 58ye");
         model.setToolTipText("");
-        add(model, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 510, 680, 90));
+        add(model, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 430, 680, 90));
 
         price.setEditable(false);
         price.setBackground(new java.awt.Color(255, 255, 255));
         price.setFont(new java.awt.Font("Dialog", 1, 40)); // NOI18N
         price.setForeground(new java.awt.Color(0, 0, 0));
-        price.setText("48,000");
+        price.setText("10");
         price.setToolTipText("");
         price.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 priceActionPerformed(evt);
             }
         });
-        add(price, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 650, 680, 80));
-
-        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/SP/img/Add-panell.png"))); // NOI18N
-        add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 120, -1, -1));
+        add(price, new org.netbeans.lib.awtextra.AbsoluteConstraints(750, 710, 680, 80));
 
         add.setFont(new java.awt.Font("Dialog", 1, 48)); // NOI18N
         add.setForeground(new java.awt.Color(255, 255, 255));
         add.setText("ADD");
-        add(add, new org.netbeans.lib.awtextra.AbsoluteConstraints(1180, 820, 170, 90));
+        add(add, new org.netbeans.lib.awtextra.AbsoluteConstraints(1690, 90, 170, 90));
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/SP/img/addbutton.png"))); // NOI18N
-        add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1120, 820, -1, -1));
+        add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1630, 90, -1, -1));
+
+        price1.setEditable(false);
+        price1.setBackground(new java.awt.Color(255, 255, 255));
+        price1.setFont(new java.awt.Font("Dialog", 1, 40)); // NOI18N
+        price1.setForeground(new java.awt.Color(0, 0, 0));
+        price1.setText("48,000");
+        price1.setToolTipText("");
+        price1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                price1ActionPerformed(evt);
+            }
+        });
+        add(price1, new org.netbeans.lib.awtextra.AbsoluteConstraints(750, 570, 680, 80));
+
+        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/SP/img/Addpanelll.png"))); // NOI18N
+        add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 70, -1, -1));
     }// </editor-fold>//GEN-END:initComponents
 
     private void priceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_priceActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_priceActionPerformed
+
+    private void price1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_price1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_price1ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -102,5 +120,6 @@ public class AddProduct extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JTextField model;
     private javax.swing.JTextField price;
+    private javax.swing.JTextField price1;
     // End of variables declaration//GEN-END:variables
 }

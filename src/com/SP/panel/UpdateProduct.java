@@ -89,6 +89,7 @@ public class UpdateProduct extends javax.swing.JPanel {
         price = new javax.swing.JTextField();
         update = new javax.swing.JLabel();
         butup = new javax.swing.JLabel();
+        price1 = new javax.swing.JTextField();
         panellin = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(255, 255, 255));
@@ -99,13 +100,13 @@ public class UpdateProduct extends javax.swing.JPanel {
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
             },
             new String [] {
-                "Brand", "Category", "Model", "Price"
+                "Category", "Brand", "Model", "Quantity", "Price"
             }
         ));
         jScrollPane1.setViewportView(jTable1);
@@ -150,24 +151,37 @@ public class UpdateProduct extends javax.swing.JPanel {
         price.setBackground(new java.awt.Color(255, 255, 255));
         price.setFont(new java.awt.Font("Dialog", 1, 40)); // NOI18N
         price.setForeground(new java.awt.Color(0, 0, 0));
-        price.setText("48,000");
+        price.setText("10");
         price.setToolTipText("");
         price.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 priceActionPerformed(evt);
             }
         });
-        add(price, new org.netbeans.lib.awtextra.AbsoluteConstraints(1310, 420, 520, 60));
+        add(price, new org.netbeans.lib.awtextra.AbsoluteConstraints(1310, 540, 520, 60));
 
         update.setFont(new java.awt.Font("Dialog", 1, 30)); // NOI18N
         update.setForeground(new java.awt.Color(255, 255, 255));
         update.setText("UPDATE");
-        add(update, new org.netbeans.lib.awtextra.AbsoluteConstraints(1650, 600, -1, -1));
+        add(update, new org.netbeans.lib.awtextra.AbsoluteConstraints(1650, 720, -1, -1));
 
         butup.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/SP/img/updatebutton.png"))); // NOI18N
-        add(butup, new org.netbeans.lib.awtextra.AbsoluteConstraints(1590, 570, -1, -1));
+        add(butup, new org.netbeans.lib.awtextra.AbsoluteConstraints(1590, 690, -1, -1));
 
-        panellin.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/SP/img/updatepanell.png"))); // NOI18N
+        price1.setEditable(false);
+        price1.setBackground(new java.awt.Color(255, 255, 255));
+        price1.setFont(new java.awt.Font("Dialog", 1, 40)); // NOI18N
+        price1.setForeground(new java.awt.Color(0, 0, 0));
+        price1.setText("48,000");
+        price1.setToolTipText("");
+        price1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                price1ActionPerformed(evt);
+            }
+        });
+        add(price1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1310, 420, 520, 60));
+
+        panellin.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/SP/img/addpanell.png"))); // NOI18N
         add(panellin, new org.netbeans.lib.awtextra.AbsoluteConstraints(1060, 10, -1, -1));
     }// </editor-fold>//GEN-END:initComponents
 
@@ -183,6 +197,10 @@ public class UpdateProduct extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_priceActionPerformed
 
+    private void price1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_price1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_price1ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField brand1;
@@ -193,6 +211,7 @@ public class UpdateProduct extends javax.swing.JPanel {
     private javax.swing.JTextField model1;
     private javax.swing.JLabel panellin;
     private javax.swing.JTextField price;
+    private javax.swing.JTextField price1;
     private javax.swing.JLabel update;
     // End of variables declaration//GEN-END:variables
 }
