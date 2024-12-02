@@ -1,5 +1,8 @@
 package com.SP.frame;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
@@ -72,7 +75,28 @@ public class Main extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Main().setVisible(true);
+                Main m = new Main();
+                login login = new login();
+                
+                m.setVisible(true);
+                
+                try 
+		{
+			for(int i = 0; i < 100; i++)
+			{
+				Thread.sleep(20);
+				m.loadbar.setValue(i);
+			}
+				
+		} 
+		catch (InterruptedException ex) 
+		{
+				Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+		}
+		
+		m.setVisible(false);
+		login.setVisible(true);
+		m.dispose(); 
             }
         });
     }
