@@ -120,6 +120,8 @@ public class ViewPanel extends javax.swing.JPanel {
 
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
+        delBtn = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(255, 255, 255));
         setMaximumSize(new java.awt.Dimension(1920, 970));
@@ -160,10 +162,30 @@ public class ViewPanel extends javax.swing.JPanel {
         }
 
         add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, 1160, 930));
+
+        delBtn.setFont(new java.awt.Font("Segoe UI", 1, 48)); // NOI18N
+        delBtn.setForeground(new java.awt.Color(255, 255, 255));
+        delBtn.setText("DELETE");
+        delBtn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                delBtnMouseClicked(evt);
+            }
+        });
+        add(delBtn, new org.netbeans.lib.awtextra.AbsoluteConstraints(1360, 210, 200, 100));
+
+        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/SP/img/Delbutton.png"))); // NOI18N
+        add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(1310, 210, -1, -1));
     }// </editor-fold>//GEN-END:initComponents
+
+    private void delBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_delBtnMouseClicked
+        // TODO add your handling code here:
+        deleteSelectedProduct();
+    }//GEN-LAST:event_delBtnMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel delBtn;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     // End of variables declaration//GEN-END:variables
