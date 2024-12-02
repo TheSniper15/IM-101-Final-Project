@@ -5,6 +5,9 @@
  */
 package com.SP.frame;
 
+
+import com.SP.panel.*;
+
 /**
  *
  * @author Arvy
@@ -16,8 +19,25 @@ public class Staff_dashboard extends javax.swing.JFrame {
      */
     public Staff_dashboard() {
         initComponents();
+        vw();
     }
-
+    
+    ViewPanel vwp = new ViewPanel();
+    AddProduct vwAddp = new AddProduct();
+    UpdateProduct vwUdp = new UpdateProduct();
+    
+    public void vw(){
+        View.add(vwp);
+    }
+    
+    public void vwAdd(){
+        View.add(vwAddp);
+    }
+    
+    public void vwUd(){
+        View.add(vwUdp);
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -32,7 +52,7 @@ public class Staff_dashboard extends javax.swing.JFrame {
         add = new javax.swing.JLabel();
         update = new javax.swing.JLabel();
         delete1 = new javax.swing.JLabel();
-        jPanel1 = new javax.swing.JPanel();
+        View = new javax.swing.JPanel();
         BG = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -89,20 +109,20 @@ public class Staff_dashboard extends javax.swing.JFrame {
         });
         getContentPane().add(delete1, new org.netbeans.lib.awtextra.AbsoluteConstraints(920, 10, -1, -1));
 
-        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
+        View.setBackground(new java.awt.Color(255, 255, 255));
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        javax.swing.GroupLayout ViewLayout = new javax.swing.GroupLayout(View);
+        View.setLayout(ViewLayout);
+        ViewLayout.setHorizontalGroup(
+            ViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 1920, Short.MAX_VALUE)
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        ViewLayout.setVerticalGroup(
+            ViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 970, Short.MAX_VALUE)
         );
 
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 110, 1920, 970));
+        getContentPane().add(View, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 110, 1920, 970));
 
         BG.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/SP/img/STAFF_DASHBOARD_1.png"))); // NOI18N
         getContentPane().add(BG, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
@@ -115,7 +135,7 @@ public class Staff_dashboard extends javax.swing.JFrame {
     }//GEN-LAST:event_dashboardMouseClicked
 
     private void addMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_addMouseClicked
-   
+        
     }//GEN-LAST:event_addMouseClicked
 
     private void updateMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_updateMouseClicked
@@ -135,44 +155,14 @@ public class Staff_dashboard extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Staff_dashboard.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Staff_dashboard.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Staff_dashboard.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Staff_dashboard.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new Staff_dashboard().setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel BG;
+    private javax.swing.JPanel View;
     private javax.swing.JLabel add;
     private javax.swing.JLabel dashboard;
     private javax.swing.JLabel delete1;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel logout;
     private javax.swing.JLabel update;
     // End of variables declaration//GEN-END:variables
