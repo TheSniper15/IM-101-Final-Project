@@ -22,10 +22,53 @@ public class login extends javax.swing.JFrame {
     public login() {
         initComponents();
         //HidePassword.setVisible(false);
-	//db.Connect();
+	db.Connect();
     }
     
     dbConn db = new dbConn();
+    
+    private void logincom()
+	{
+		String usr = username.getText();
+		String pswd = new String(jPasswordField1.getPassword());
+		String stat = "1";
+		
+		try
+		{
+			db.pst = db.con.prepareStatement("SELECT * FROM Staff where username = ? and password = ?");
+			db.pst.setString(1, usr);
+			db.pst.setString(2,pswd);
+			db.rs = db.pst.executeQuery();
+			
+			if(db.rs.next())
+			{
+				db.pst = db.con.prepareStatement("SELECT * FROM Staff where username = ? and password = ? and role_id = ?");
+				db.pst.setString(1, usr);
+				db.pst.setString(2,pswd);
+				db.pst.setString(3,stat);
+				db.rs = db.pst.executeQuery();
+			
+				if(db.rs.next())
+				{
+					new Admin().setVisible(true);
+					this.dispose();
+				}
+				else
+				{
+					new Staff_dashboard().setVisible(true);
+					this.dispose();
+				}
+			}
+			else
+			{
+				JOptionPane.showMessageDialog(this, "Username or Password is Incorrect!!");
+			}
+		}
+		catch(SQLException ex)
+		{
+			Logger.getLogger(login.class.getName()).log(Level.SEVERE, null, ex);
+		}
+	}
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -45,15 +88,12 @@ public class login extends javax.swing.JFrame {
         setMaximumSize(new java.awt.Dimension(1920, 1080));
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        username.setEditable(false);
         username.setBackground(new java.awt.Color(255, 255, 255));
         username.setFont(new java.awt.Font("Dialog", 1, 36)); // NOI18N
         username.setForeground(new java.awt.Color(0, 0, 0));
-        username.setText("Jeanne Pelayo");
         username.setToolTipText("");
         getContentPane().add(username, new org.netbeans.lib.awtextra.AbsoluteConstraints(900, 500, 510, 70));
 
-        jPasswordField1.setText("password");
         jPasswordField1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jPasswordField1ActionPerformed(evt);
@@ -91,55 +131,12 @@ public class login extends javax.swing.JFrame {
 
     private void EnterMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_EnterMouseClicked
         // TODO add your handling code here:
-        new Staff_dashboard().setVisible(true);
-        this.dispose();
+        logincom();
     }//GEN-LAST:event_EnterMouseClicked
 
     /**
      * @param args the command line arguments
      */
-    private void logincom()
-	{
-		String usr = username.getText();
-		String pswd = new String(jPasswordField1.getPassword());
-		String stat = "Admin";
-		
-		try
-		{
-			db.pst = db.con.prepareStatement("SELECT * FROM librarians where username = ? and password = ?");
-			db.pst.setString(1, usr);
-			db.pst.setString(2,pswd);
-			db.rs = db.pst.executeQuery();
-			
-			if(db.rs.next())
-			{
-				db.pst = db.con.prepareStatement("SELECT * FROM librarians where username = ? and password = ? and Status = ?");
-				db.pst.setString(1, usr);
-				db.pst.setString(2,pswd);
-				db.pst.setString(3,stat);
-				db.rs = db.pst.executeQuery();
-			
-				if(db.rs.next())
-				{
-					new Admin().setVisible(true);
-					this.dispose();
-				}
-				else
-				{
-					new Staff_dashboard().setVisible(true);
-					this.dispose();
-				}
-			}
-			else
-			{
-				JOptionPane.showMessageDialog(this, "Username or Password is Incorrect!!");
-			}
-		}
-		catch(SQLException ex)
-		{
-			Logger.getLogger(login.class.getName()).log(Level.SEVERE, null, ex);
-		}
-	}
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel Enter;

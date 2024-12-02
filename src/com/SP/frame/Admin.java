@@ -4,6 +4,15 @@
  */
 package com.SP.frame;
 
+import com.SP.db.dbConn;
+import com.SP.panel.ViewPanel;
+import java.sql.SQLException;
+import javax.swing.JOptionPane;
+import java.sql.Statement;
+import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.table.DefaultTableModel;
 /**
  *
  * @author Arvy
@@ -15,8 +24,101 @@ public class Admin extends javax.swing.JFrame {
      */
     public Admin() {
         initComponents();
+        db.Connect();
+        retrieveData();
+    }
+    
+    dbConn db = new dbConn();
+    
+    public void addStaff() {
+    try {
+        // Get input data
+        String fullname = name1.getText();
+        String role1 = role.getText();  // Assume this is where the role is entered by the user
+        
+        // Check if the role exists
+        String checkRoleQuery = "SELECT role_id FROM roleTbl WHERE role_set = ?";
+        db.pst = db.con.prepareStatement(checkRoleQuery);
+        db.pst.setString(1, role1);
+        db.rs = db.pst.executeQuery();
+        
+        int roleId = -1;
+        
+        if (db.rs.next()) {
+            roleId = db.rs.getInt("role_id");
+        } else {
+            // Insert the new role if it doesn't exist
+            String insertRoleQuery = "INSERT INTO roleTbl (role_set) VALUES (?)";
+            db.pst = db.con.prepareStatement(insertRoleQuery, Statement.RETURN_GENERATED_KEYS);
+            db.pst.setString(1, role1);
+            int rowsAffected = db.pst.executeUpdate();
+            
+            if (rowsAffected > 0) {
+                db.rs = db.pst.getGeneratedKeys();
+                if (db.rs.next()) {
+                    roleId = db.rs.getInt(1);
+                }
+            }
+        }
+
+        // Insert staff into Staff table
+        if (roleId != -1) {
+            String insertStaffQuery = "INSERT INTO Staff (fullname, role_ID) VALUES (?, ?)";
+            db.pst = db.con.prepareStatement(insertStaffQuery);
+            db.pst.setString(1, fullname);
+            db.pst.setInt(2, roleId);
+
+            int rowsAffected = db.pst.executeUpdate();
+
+            if (rowsAffected == 1) {
+                JOptionPane.showMessageDialog(this, "Staff record added successfully.");
+                name1.setText("");
+                role.setText("");
+
+            } else {
+                JOptionPane.showMessageDialog(this, "Failed to add staff.");
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Failed to get role ID.");
+        }
+    } catch (SQLException ex) {
+        JOptionPane.showMessageDialog(this, "Error adding staff: " + ex.getMessage());
+    }
+}
+    
+            public void retrieveData() {
+        try {
+            int q;
+            db.pst = db.con.prepareStatement("SELECT s.id, s.fullname, r.role_set AS role, s.password, s.username\n" +
+                                             "FROM Staff s\n" + "JOIN roleTbl r ON s.role_id = r.role_id;");
+            db.rs = db.pst.executeQuery();
+            java.sql.ResultSetMetaData rss = db.rs.getMetaData();
+            q = rss.getColumnCount();  
+
+            DefaultTableModel df = (DefaultTableModel) jTable1.getModel();
+            df.setRowCount(0);
+
+            while (db.rs.next()) {
+                Vector v2 = new Vector();
+                for (int a = 1; a  <= q ; a++) {
+                    v2.add(db.rs.getString("fullname"));
+                    v2.add(db.rs.getString("role"));
+                    v2.add(db.rs.getString("password"));
+                    v2.add(db.rs.getString("username"));
+                    v2.add(db.rs.getInt("id"));
+                }
+                df.addRow(v2);
+            }
+            jTable1.getColumnModel().getColumn(4).setMaxWidth(0);
+            jTable1.getColumnModel().getColumn(4).setMinWidth(0);
+            jTable1.getColumnModel().getColumn(4).setPreferredWidth(0);
+
+        } catch (SQLException ex) {
+            Logger.getLogger(ViewPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -44,20 +146,36 @@ public class Admin extends javax.swing.JFrame {
         add.setFont(new java.awt.Font("Dialog", 1, 36)); // NOI18N
         add.setForeground(new java.awt.Color(255, 255, 255));
         add.setText("ADD");
+        add.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                addMouseClicked(evt);
+            }
+        });
         getContentPane().add(add, new org.netbeans.lib.awtextra.AbsoluteConstraints(1710, 520, -1, -1));
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "Full Name", "Role", "Password", "Username", "ID"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, true, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jScrollPane1.setViewportView(jTable1);
+        if (jTable1.getColumnModel().getColumnCount() > 0) {
+            jTable1.getColumnModel().getColumn(4).setResizable(false);
+        }
 
         getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 200, 950, 830));
 
@@ -71,11 +189,9 @@ public class Admin extends javax.swing.JFrame {
         });
         getContentPane().add(logout, new org.netbeans.lib.awtextra.AbsoluteConstraints(1697, 30, 170, 60));
 
-        role.setEditable(false);
         role.setBackground(new java.awt.Color(255, 255, 255));
         role.setFont(new java.awt.Font("Dialog", 1, 40)); // NOI18N
         role.setForeground(new java.awt.Color(0, 0, 0));
-        role.setText("Admin");
         role.setToolTipText("");
         role.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -84,11 +200,9 @@ public class Admin extends javax.swing.JFrame {
         });
         getContentPane().add(role, new org.netbeans.lib.awtextra.AbsoluteConstraints(1360, 360, 430, 50));
 
-        name1.setEditable(false);
         name1.setBackground(new java.awt.Color(255, 255, 255));
         name1.setFont(new java.awt.Font("Dialog", 1, 40)); // NOI18N
         name1.setForeground(new java.awt.Color(0, 0, 0));
-        name1.setText("Jeanne");
         name1.setToolTipText("");
         name1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -105,11 +219,21 @@ public class Admin extends javax.swing.JFrame {
         delete1.setFont(new java.awt.Font("Dialog", 1, 36)); // NOI18N
         delete1.setForeground(new java.awt.Color(255, 255, 255));
         delete1.setText("DELETE");
+        delete1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                delete1MouseClicked(evt);
+            }
+        });
         getContentPane().add(delete1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1180, 520, -1, -1));
 
         update1.setFont(new java.awt.Font("Dialog", 1, 36)); // NOI18N
         update1.setForeground(new java.awt.Color(255, 255, 255));
         update1.setText("UPDATE");
+        update1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                update1MouseClicked(evt);
+            }
+        });
         getContentPane().add(update1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1430, 520, -1, -1));
 
         BG.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/SP/img/Admin_1.png"))); // NOI18N
@@ -119,8 +243,9 @@ public class Admin extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void logoutMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_logoutMouseClicked
-        login loginFrame = new login();
-        loginFrame.setVisible(true);
+      login loginFrame = new login();
+      loginFrame.setVisible(true);
+      this.dispose();
     }//GEN-LAST:event_logoutMouseClicked
 
     private void roleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_roleActionPerformed
@@ -130,6 +255,18 @@ public class Admin extends javax.swing.JFrame {
     private void name1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_name1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_name1ActionPerformed
+
+    private void delete1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_delete1MouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_delete1MouseClicked
+
+    private void update1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_update1MouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_update1MouseClicked
+
+    private void addMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_addMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_addMouseClicked
 
     /**
      * @param args the command line arguments

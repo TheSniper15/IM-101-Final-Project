@@ -32,7 +32,8 @@ public class ViewPanel extends javax.swing.JPanel {
         public void retrieveData() {
         try {
             int q;
-            db.pst = db.con.prepareStatement("SELECT * FROM product");
+            db.pst = db.con.prepareStatement("SELECT p.p_id, p.category, b.brand AS brand_name, p.model, p.quantity, p.price\n" +
+                                             "FROM Product p\n" + "JOIN Brands b ON p.brand_id = b.b_id;");
             db.rs = db.pst.executeQuery();
             java.sql.ResultSetMetaData rss = db.rs.getMetaData();
             q = rss.getColumnCount();  
@@ -44,7 +45,7 @@ public class ViewPanel extends javax.swing.JPanel {
                 Vector v2 = new Vector();
                 for (int a = 1; a  <= q ; a++) {
                     v2.add(db.rs.getString("CATEGORY"));
-                    v2.add(db.rs.getString("BRAND_ID"));
+                    v2.add(db.rs.getString("BRAND_name"));
                     v2.add(db.rs.getString("MODEL"));
                     v2.add(db.rs.getString("QUANTITY"));
                     v2.add(db.rs.getString("PRICE"));

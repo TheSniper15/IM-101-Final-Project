@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -28,10 +29,51 @@ public class UpdateProduct extends javax.swing.JPanel {
     
     dbConn db = new dbConn();
     
-            public void retrieveData() {
+    public String g_p_id;
+    
+    public void ud()
+    {
+	    try 
+		{
+                    String brand = brand1.getText();
+                    String cat =    category.getText();
+                    String model =   model1.getText();
+                    String qty =    quantity.getText();
+                    String price = price1.getText();
+			
+                    db.pst = db.con.prepareStatement("UPDATE Product SET category=?,brand_id=?,model=?,quantity=?,price=? WHERE p_id=?");
+			
+                    db.pst.setString(1,brand);
+                    db.pst.setString(2,cat);
+                    db.pst.setString(3,model);
+                    db.pst.setString(4,qty);
+                    db.pst.setString(5,price);
+                    db.pst.setString(6,g_p_id);
+
+                    int k = db.pst.executeUpdate();
+                    if(k == 1)
+                    {
+                        JOptionPane.showMessageDialog(this,"Record Has Been Updated!!");
+                        brand1.setText("");
+                        category.setText("");
+                        model1.setText("");
+                        quantity.setText("");
+                        price1.setText("");
+				
+			retrieveData();
+                    }
+		} 
+		catch (SQLException ex) 
+		{
+                    Logger.getLogger(UpdateProduct.class.getName()).log(Level.SEVERE, null, ex);
+		}
+    }
+    
+        public void retrieveData() {
         try {
             int q;
-            db.pst = db.con.prepareStatement("SELECT * FROM product");
+            db.pst = db.con.prepareStatement("SELECT p.p_id, p.category, b.brand AS brand_name, p.model, p.quantity, p.price\n" +
+                                             "FROM Product p\n" + "JOIN Brands b ON p.brand_id = b.b_id;");
             db.rs = db.pst.executeQuery();
             java.sql.ResultSetMetaData rss = db.rs.getMetaData();
             q = rss.getColumnCount();  
@@ -43,7 +85,7 @@ public class UpdateProduct extends javax.swing.JPanel {
                 Vector v2 = new Vector();
                 for (int a = 1; a  <= q ; a++) {
                     v2.add(db.rs.getString("CATEGORY"));
-                    v2.add(db.rs.getString("BRAND_ID"));
+                    v2.add(db.rs.getString("BRAND_name"));
                     v2.add(db.rs.getString("MODEL"));
                     v2.add(db.rs.getString("QUANTITY"));
                     v2.add(db.rs.getString("PRICE"));
@@ -62,22 +104,22 @@ public class UpdateProduct extends javax.swing.JPanel {
            
             
     public void search() {
-        // Make sure a row is selected
+
         int selectedRow = jTable1.getSelectedRow();
         if (selectedRow == -1) {
-            return;  // If no row is selected, return and do nothing
+            return;  
         }
 
         DefaultTableModel tbModel = (DefaultTableModel) jTable1.getModel();
 
-        // Get values from the selected row
-        String brand = tbModel.getValueAt(selectedRow, 0).toString();  // Assuming brand is in the first column
-        String cat = tbModel.getValueAt(selectedRow, 1).toString();    // Category in the second column
-        String model = tbModel.getValueAt(selectedRow, 2).toString();  // Model in the third column
-        String qty = tbModel.getValueAt(selectedRow, 3).toString();    // Quantity in the fourth column
-        String price = tbModel.getValueAt(selectedRow, 4).toString();  // Price in the fifth column
+        String brand = tbModel.getValueAt(selectedRow, 0).toString();  
+        String cat = tbModel.getValueAt(selectedRow, 1).toString();    
+        String model = tbModel.getValueAt(selectedRow, 2).toString();  
+        String qty = tbModel.getValueAt(selectedRow, 3).toString();    
+        String price = tbModel.getValueAt(selectedRow, 4).toString();  
+        g_p_id = tbModel.getValueAt(selectedRow, 5).toString();
 
-        // Update the text fields with the selected row's data
+
         brand1.setText(brand);
         category.setText(cat);
         model1.setText(model);
@@ -147,14 +189,12 @@ public class UpdateProduct extends javax.swing.JPanel {
 
         add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, 1000, 920));
 
-        brand1.setEditable(false);
         brand1.setBackground(new java.awt.Color(255, 255, 255));
         brand1.setFont(new java.awt.Font("Dialog", 1, 40)); // NOI18N
         brand1.setForeground(new java.awt.Color(0, 0, 0));
         brand1.setToolTipText("");
-        add(brand1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1310, 80, 520, 50));
+        add(brand1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1310, 80, 520, 60));
 
-        category.setEditable(false);
         category.setBackground(new java.awt.Color(255, 255, 255));
         category.setFont(new java.awt.Font("Dialog", 1, 40)); // NOI18N
         category.setForeground(new java.awt.Color(0, 0, 0));
@@ -164,9 +204,8 @@ public class UpdateProduct extends javax.swing.JPanel {
                 categoryActionPerformed(evt);
             }
         });
-        add(category, new org.netbeans.lib.awtextra.AbsoluteConstraints(1310, 200, 520, 50));
+        add(category, new org.netbeans.lib.awtextra.AbsoluteConstraints(1310, 200, 520, 60));
 
-        model1.setEditable(false);
         model1.setBackground(new java.awt.Color(255, 255, 255));
         model1.setFont(new java.awt.Font("Dialog", 1, 40)); // NOI18N
         model1.setForeground(new java.awt.Color(0, 0, 0));
@@ -176,9 +215,8 @@ public class UpdateProduct extends javax.swing.JPanel {
                 model1ActionPerformed(evt);
             }
         });
-        add(model1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1310, 310, 520, 50));
+        add(model1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1310, 310, 520, 60));
 
-        quantity.setEditable(false);
         quantity.setBackground(new java.awt.Color(255, 255, 255));
         quantity.setFont(new java.awt.Font("Dialog", 1, 40)); // NOI18N
         quantity.setForeground(new java.awt.Color(0, 0, 0));
@@ -193,12 +231,16 @@ public class UpdateProduct extends javax.swing.JPanel {
         update.setFont(new java.awt.Font("Dialog", 1, 30)); // NOI18N
         update.setForeground(new java.awt.Color(255, 255, 255));
         update.setText("UPDATE");
+        update.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                updateMouseClicked(evt);
+            }
+        });
         add(update, new org.netbeans.lib.awtextra.AbsoluteConstraints(1650, 720, -1, -1));
 
         butup.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/SP/img/updatebutton.png"))); // NOI18N
         add(butup, new org.netbeans.lib.awtextra.AbsoluteConstraints(1590, 690, -1, -1));
 
-        price1.setEditable(false);
         price1.setBackground(new java.awt.Color(255, 255, 255));
         price1.setFont(new java.awt.Font("Dialog", 1, 40)); // NOI18N
         price1.setForeground(new java.awt.Color(0, 0, 0));
@@ -208,7 +250,7 @@ public class UpdateProduct extends javax.swing.JPanel {
                 price1ActionPerformed(evt);
             }
         });
-        add(price1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1310, 420, 520, 60));
+        add(price1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1310, 420, 520, 70));
 
         panellin.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/SP/img/addpanell.png"))); // NOI18N
         add(panellin, new org.netbeans.lib.awtextra.AbsoluteConstraints(1060, 10, -1, -1));
@@ -234,6 +276,11 @@ public class UpdateProduct extends javax.swing.JPanel {
         // TODO add your handling code here:
         search();
     }//GEN-LAST:event_jTable1MouseClicked
+
+    private void updateMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_updateMouseClicked
+        // TODO add your handling code here:
+        ud();
+    }//GEN-LAST:event_updateMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

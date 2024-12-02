@@ -6,7 +6,7 @@
 package com.SP.frame;
 
 
-import com.SP.panel.*;
+
 
 /**
  *
@@ -21,6 +21,7 @@ public class Staff_dashboard extends javax.swing.JFrame {
         initComponents();
         onStrt();
     }
+    
     
     public void onStrt(){
         addProduct1.setVisible(false);
@@ -124,7 +125,7 @@ public class Staff_dashboard extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void dashboardMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_dashboardMouseClicked
-        onStrt();
+        onStrt();;
     }//GEN-LAST:event_dashboardMouseClicked
 
     private void addMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_addMouseClicked
